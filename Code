@@ -1,0 +1,46 @@
+## 📊 Key SQL Queries
+1. **Overall Cancellation Rate**  
+```sql
+SELECT 
+    COUNT(*) AS total_orders,
+    SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
+    ROUND(100.0 * SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) / COUNT(*), 2) AS cancellation_rate
+FROM orders;
+Cancellations by Category
+
+sql
+Copy
+Edit
+SELECT 
+    category,
+    COUNT(*) AS total_orders,
+    SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
+    ROUND(100.0 * SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) / COUNT(*), 2) AS cancellation_rate
+FROM orders
+GROUP BY category
+ORDER BY cancellation_rate DESC;
+Cancellations by Payment Method
+
+sql
+Copy
+Edit
+SELECT 
+    payment_method,
+    COUNT(*) AS total_orders,
+    SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
+    ROUND(100.0 * SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) / COUNT(*), 2) AS cancellation_rate
+FROM orders
+GROUP BY payment_method
+ORDER BY cancellation_rate DESC;
+Monthly Cancellation Trends
+
+sql
+Copy
+Edit
+SELECT 
+    strftime('%Y-%m', order_date) AS month,   -- use DATE_FORMAT(order_date, '%Y-%m') in MySQL
+    COUNT(*) AS total_orders,
+    SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_orders
+FROM orders
+GROUP BY month
+ORDER BY month;
